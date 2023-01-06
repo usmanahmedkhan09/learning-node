@@ -1,31 +1,19 @@
 const express = require('express');
 const app = express()
 const port = 3000
-// const birds = require('./birds')
 
-// app.use('/birds', birds)
-
-app.get('/', (req, res, next) =>
+const myLogger = function (req, res, next)
 {
-    console.log('called from one function')
+    console.log('LOGGED', req)
     next()
-}, (req, res) =>
+}
+
+app.use(myLogger)
+
+app.get('/', (req, res) =>
 {
-    res.send('hello from second')
+    res.send('hello from app')
 })
 
 
-
-
-
-
-
-
-
-
-
-
-app.listen(port, () =>
-{
-    console.log(`listening on port ${port}`)
-})
+app.listen(port)
