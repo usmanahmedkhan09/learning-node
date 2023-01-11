@@ -3,11 +3,16 @@ const app = express()
 const port = 3000
 
 
-app.use((req, res, next) =>
+app.use('/user/:id', (req, res, next) =>
 {
-    console.log("Time", Date.now())
+    console.log('Time', req.method)
     next()
 })
 
+
+app.get('/user/:id', (req, res, next) =>
+{
+    res.send('hello from user')
+})
 
 app.listen(port)    
