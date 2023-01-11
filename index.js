@@ -7,6 +7,10 @@ app.use('/user/:id', (req, res, next) =>
 {
     console.log('Time', req.method)
     next()
+}, (req, res, next) =>
+{
+    console.log('Time from second', req.params)
+    next()
 })
 
 
