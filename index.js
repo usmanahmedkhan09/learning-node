@@ -2,17 +2,19 @@ const express = require('express');
 const app = express()
 const port = 3000
 
-const myLogger = function (req, res, next)
+const requestTime = function (req, res, next)
 {
-    console.log('LOGGED', req)
+    req.requestTime = Date.now()
     next()
 }
 
-app.use(myLogger)
+app.use(requestTime)
 
 app.get('/', (req, res) =>
 {
-    res.send('hello from app')
+    let responseText = 'Hello world at '
+    responseText += `${req.requestTime}`
+    res.send(responseText)
 })
 
 
