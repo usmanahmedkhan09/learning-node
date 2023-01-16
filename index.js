@@ -1,24 +1,17 @@
-const express = require('express');
-const app = express()
-const router = express.Router();
-const port = 3000
+const http = require('http');
+
+const hostname = '127.0.0.1';
+const port = 3000;
 
 
-// router.use((req, res, next) =>
-// {
-//     // console.log('hererrerer', req)
-//     next()
-// })
-
-app.use((err, req, res, next) =>
+const server = http.createServer((req, res) =>
 {
-    console.error(err.stack)
+    res.statusCode = 200;
+    res.setHeader('Content-type', 'text/plain')
+    res.end('hello world')
 })
 
-
-app.get('/', (req, res, next) =>
+server.listen(port, hostname, () =>
 {
-    res.status(500).send('network error')
-
+    console.log('listening on port',)
 })
-app.listen(port)    
