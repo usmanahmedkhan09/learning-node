@@ -1,22 +1,24 @@
 const express = require('express');
 const app = express()
+const router = express.Router();
 const port = 3000
 
 
-app.use('/user/:id', (req, res, next) =>
+// router.use((req, res, next) =>
+// {
+//     // console.log('hererrerer', req)
+//     next()
+// })
+
+app.use((err, req, res, next) =>
 {
-    console.log('Time', req.method)
-    next()
-}, (req, res, next) =>
-{
-    console.log('Time from second', req.params)
-    next()
+    console.error(err.stack)
 })
 
 
-app.get('/user/:id', (req, res, next) =>
+app.get('/', (req, res, next) =>
 {
-    res.send('hello from user')
-})
+    res.status(500).send('network error')
 
+})
 app.listen(port)    
