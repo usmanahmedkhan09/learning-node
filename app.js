@@ -7,6 +7,8 @@ const rootDir = require('./util/path')
 const bodyParser = require('body-parser')
 
 app.use(express.static(path.join(rootDir, 'public')))
+app.set('views', './views') // specify the views directory
+app.set('view engine', 'ejs') // register the template engine
 
 const adminRoutes = require('./routes/admin')
 
@@ -14,10 +16,6 @@ const shopRoutes = require('./routes/shop')
 
 app.use(bodyParser.urlencoded({ extended: false }))
 
-
-
-app.set('views', './views') // specify the views directory
-app.set('view engine', 'ejs') // register the template engine
 
 app.use('/admin', adminRoutes.routes)
 app.use(shopRoutes)
