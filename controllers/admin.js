@@ -5,6 +5,7 @@ exports.getAddProduct = (req, res, next) =>
   res.render('admin/edit-product', {
     pageTitle: 'Add Product',
     path: '/admin/add-product',
+    editing: false,
   });
 };
 
@@ -51,6 +52,13 @@ exports.postAddProduct = (req, res, next) =>
   product.save();
   res.redirect('/');
 };
+
+exports.deleteProduct = (req, res, next) =>
+{
+  const productId = req.params.id;
+  Product.deleteProduct(productId)
+  res.redirect('/admin/products')
+}
 
 exports.getProducts = (req, res, next) =>
 {
