@@ -1,26 +1,7 @@
-const fs = require('fs');
-const path = require('path');
+const db = require('../util/database')
 const Cart = require('./cart')
 
-const p = path.join(
-  path.dirname(process.mainModule.filename),
-  'data',
-  'products.json'
-);
 
-const getProductsFromFile = cb =>
-{
-  fs.readFile(p, (err, fileContent) =>
-  {
-    if (err)
-    {
-      cb([]);
-    } else
-    {
-      cb(JSON.parse(fileContent));
-    }
-  });
-};
 
 module.exports = class Product
 {
@@ -35,62 +16,21 @@ module.exports = class Product
 
   save()
   {
-    getProductsFromFile(products =>
-    {
-      if (this.id)
-      {
-        let existingProductIndex = products.findIndex((product) => product.id == this.id)
-        let udpatedProducts = [...products]
-        udpatedProducts[existingProductIndex] = this
-        fs.writeFile(p, JSON.stringify(udpatedProducts), err =>
-        {
-          console.log(err);
-        });
-
-      } else
-      {
-        this.id = Math.random().toString();
-        products.push(this);
-        fs.writeFile(p, JSON.stringify(products), err =>
-        {
-          console.log(err);
-        });
-      }
-
-    });
-
-
+    return db.execute('INSERT INTO products (title, imageUrl, description, price) VALUES (?, ?, ?, ?)', [this.title, this.imageUrl, this.description, this.price])
   }
 
-  static fetchAll(cb)
+  static fetchAll()
   {
-    getProductsFromFile(cb);
+    return db.execute('SELECT * FROM products')
   }
 
-  static getProductById(productId, cb)
+  static getProductById(productId)
   {
-    getProductsFromFile(products =>
-    {
-      const prod = products.find(product => product.id == productId)
-      cb(prod)
-    })
+    return db.execute('SELECT * FROM products WHERE products.id = ?', [productId])
   }
 
   static deleteProduct(productId)
   {
-    getProductsFromFile(products =>
-    {
-      const productIndex = products.findIndex((product) => product.id == productId)
-      const product = products[productIndex]
-      if (productIndex != -1)
-      {
-        products.splice(productIndex, 1)
-      }
-      fs.writeFile(p, JSON.stringify(products), err =>
-      {
-        Cart.deleteProduct(productId, product.price)
-        console.log(err);
-      });
-    })
+
   }
 };

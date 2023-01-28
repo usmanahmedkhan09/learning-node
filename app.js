@@ -6,6 +6,8 @@ const app = express()
 const rootDir = require('./util/path')
 const bodyParser = require('body-parser')
 
+const db = require('./util/database')
+
 app.use(express.static(path.join(rootDir, 'public')))
 
 app.set('views', './views') // specify the views directory
