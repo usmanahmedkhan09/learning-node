@@ -1,6 +1,45 @@
-<%- include('../includes/head.ejs') %>
+<%- include('../includes/head.ejs')
+    %>
     </head>
 
     <body>
-        <%- include('../includes/navigation.ejs') %>
-        <%- include('../includes/end.ejs') %>
+        <%- include('../includes/navigation.ejs')
+            %>
+            <main>
+                <ul>
+                    <% if(products.length> 0)
+                        {
+                        %>
+                        <% products.forEach((item)=> { %>
+                            <li>
+                                <p>
+                                    <%= item.productData.title
+                                        %>
+                                        (
+                                        <%= item.qty
+                                            %>
+                                            )
+                                </p>
+                                <form action="/cart-delete-item"
+                                      method="POST">
+                                    <button class="btn"
+                                            type="submit">Delete</button>
+                                    <input hidden
+                                           type="text"
+                                           name="prodcutId"
+                                           value="<%= product.id %>">
+                                </form>
+                            </li>
+                            <% })
+                               %>
+                                <% }
+                                   else
+                                   {
+                                   %>
+                                    <h1>No Products Found In Cart</h1>
+                                    <% }
+                                       %>
+                </ul>
+            </main>
+            <%- include('../includes/end.ejs')
+                %>
