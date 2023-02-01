@@ -1,3 +1,4 @@
+const { response } = require('express');
 const mongodb = require('mongodb')
 const { getDb } = require('../util/database');
 
@@ -69,6 +70,37 @@ class User
                     }
                 })
             })
+    }
+
+    deleteProductFromCart(productId)
+    {
+        const db = getDb()
+        const updatedCartItems = this.cart.items.filter((item) => item.productId.toString() != productId.toString())
+        return db.collection('users').updateOne({ _id: new mongodb.ObjectId(this._id) }, { $set: { cart: { items: updatedCartItems } } })
+    }
+
+    addOrder()
+    {
+        const db = getDb()
+        return this.getCart((products) =>
+        {
+            return products
+        }).then((products) =>
+        {
+            let order = {
+                items: products,
+                user: {
+                    _id: new mongodb.ObjectId(this._id),
+                    name: this.username,
+                    email: this.email
+                }
+            }
+            return db.collection('orders').insertOne(order)
+        }).then(() =>
+        {
+            return db.collection('users').updateOne({ _id: new mongodb.ObjectId(this._id) }, { $set: { cart: { items: [] } } })
+
+        })
     }
 
     static findById(userId)
