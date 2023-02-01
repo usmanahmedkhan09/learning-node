@@ -41,9 +41,9 @@
                                     </p>
                                 </div>
                                 <div class="card__actions">
-                                    <a href="/admin/edit-product/<%= product.id %>?editMode=<%= true %>"
+                                    <a href="/admin/edit-product/<%= product._id %>?editMode=<%= true %>"
                                        class="btn">Edit</a>
-                                    <form action="/admin/delete-product/<%= product.id %>"
+                                    <form action="/admin/delete-product/<%= product._id %>"
                                           method="POST">
                                         <button class="btn"
                                                 type="submit">Delete</button>

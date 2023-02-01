@@ -1,6 +1,7 @@
+const mongodb = require('mongodb')
 const Product = require('../models/product');
 
-const { Sequelize } = require('sequelize')
+
 
 exports.getAddProduct = (req, res, next) =>
 {
@@ -19,7 +20,7 @@ exports.getEditProduct = (req, res, next) =>
     return res.redirect('/')
   }
   const productId = req.params.productId
-  Product.findByPk(productId).then((product) =>
+  Product.findById(productId).then((product) =>
   {
     res.render('admin/edit-product', {
       pageTitle: 'Edit Product',
@@ -38,10 +39,11 @@ exports.postEditProduct = (req, res, next) =>
   const updatedDescription = req.body.description
   const updatedPrice = req.body.price
   const updatedimageUrl = req.body.imageUrl
-  Product.update({ title: updatedTitle, imageUrl: updatedimageUrl, price: updatedPrice, description: updatedDescription }, { where: { id: productId } }).then((response) =>
+  const product = new Product(productId, updatedTitle, updatedimageUrl, updatedPrice, updatedDescription)
+  product.updateProduct().then((product) =>
   {
     res.redirect('/admin/products')
-  }).catch((error) => console.log(error))
+  })
 }
 
 exports.postAddProduct = async (req, res, next) =>
@@ -50,15 +52,15 @@ exports.postAddProduct = async (req, res, next) =>
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
-  req.user.createProduct({ title: title, imageUrl: imageUrl, price: price, description: description }).then((response) => [
-    res.redirect('/')
-  ]).catch((error) => console.log(error))
+  const product = new Product(null, title, imageUrl, price, description, req.user._id)
+  product.save().then((response) => res.redirect('/admin/products')).catch((error) => console.log(error))
+
 };
 
 exports.deleteProduct = (req, res, next) =>
 {
   const productId = req.params.id;
-  Product.destroy({ where: { id: productId } }).then((resposne) =>
+  Product.deleteProduct(productId).then((resposne) =>
   {
 
     res.redirect('/admin/products')
@@ -67,12 +69,16 @@ exports.deleteProduct = (req, res, next) =>
 
 exports.getProducts = (req, res, next) =>
 {
-  req.user.getProducts().then((products) =>
+
+  Product.fetchAll().then((products) =>
   {
     res.render('admin/products', {
       prods: products,
       pageTitle: 'Admin Products',
       path: '/admin/products'
     });
+  }).catch((error) =>
+  {
+    console.log(error)
   })
 };
