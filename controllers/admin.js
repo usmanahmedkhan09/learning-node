@@ -39,11 +39,18 @@ exports.postEditProduct = (req, res, next) =>
   const updatedDescription = req.body.description
   const updatedPrice = req.body.price
   const updatedimageUrl = req.body.imageUrl
-  const product = new Product(productId, updatedTitle, updatedimageUrl, updatedPrice, updatedDescription)
-  product.updateProduct().then((product) =>
+  Product.findById(productId).then((product) =>
+  {
+    product.title = updatedTitle
+    product.description = updatedDescription
+    product.price = updatedPrice
+    product.imageUrl = updatedimageUrl
+    return product.save()
+  }).then((result) =>
   {
     res.redirect('/admin/products')
   })
+
 }
 
 exports.postAddProduct = async (req, res, next) =>
@@ -52,7 +59,13 @@ exports.postAddProduct = async (req, res, next) =>
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
-  const product = new Product(null, title, imageUrl, price, description, req.user._id)
+  const product = new Product({
+    title: title,
+    imageUrl: imageUrl,
+    price: price,
+    description: description,
+    userId: req.user
+  })
   product.save().then((response) => res.redirect('/admin/products')).catch((error) => console.log(error))
 
 };
@@ -60,9 +73,8 @@ exports.postAddProduct = async (req, res, next) =>
 exports.deleteProduct = (req, res, next) =>
 {
   const productId = req.params.id;
-  Product.deleteProduct(productId).then((resposne) =>
+  Product.findByIdAndRemove(productId).then((resposne) =>
   {
-
     res.redirect('/admin/products')
   }).catch((error) => console.log(error))
 }
@@ -70,7 +82,7 @@ exports.deleteProduct = (req, res, next) =>
 exports.getProducts = (req, res, next) =>
 {
 
-  Product.fetchAll().then((products) =>
+  Product.find().then((products) =>
   {
     res.render('admin/products', {
       prods: products,
