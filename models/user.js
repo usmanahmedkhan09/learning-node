@@ -4,11 +4,11 @@ const { Schema } = mongoose;
 const Order = require('./order')
 
 const userSchema = new Schema({
-    name: {
+    email: {
         type: String,
         required: true
     },
-    email: {
+    password: {
         type: String,
         required: true
     },
@@ -49,13 +49,10 @@ userSchema.methods.removeProductFromCart = function (productId)
     return this.save()
 }
 
-userSchema.methods.addOrder = function ()
+userSchema.methods.clearCart = function ()
 {
-    const products = this.cart.items
-    const order = new Order({ userId: this._id, items: products })
-    this.cart.items = []
-    this.save()
-    return order.save()
+    this.cart = { items: [] }
+    return this.save()
 }
 
 module.exports = mongoose.model('User', userSchema)
