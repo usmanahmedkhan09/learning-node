@@ -11,34 +11,51 @@
             %>
 
             <main>
-                <form class="login-form"
-                      action="/signup"
-                      method="POST">
-                    <div class="form-control">
-                        <label for="email">E-Mail</label>
-                        <input type="email"
-                               name="email"
-                               id="email">
+                <% if
+                   (errorMessage)
+                   {
+                   %>
+                    <div class="user-message user-message--error">
+                        <%= errorMessage
+                            %>
                     </div>
-                    <div class="form-control">
-                        <label for="password">Password</label>
-                        <input type="password"
-                               name="password"
-                               id="password">
-                    </div>
-                    <div class="form-control">
-                        <label for="confirmPassword">Confirm Password</label>
-                        <input type="password"
-                               name="confirmPassword"
-                               id="confirmPassword">
-                    </div>
-                    <input type="text"
-                           hidden
-                           name="_csrf"
-                           value="<%= csrfToken %>">
-                    <button class="btn"
-                            type="submit">signup</button>
-                </form>
+                    <% }
+                       %>
+                        <form class="login-form"
+                              action="/signup"
+                              method="POST"
+                              novalidate>
+                            <div class="form-control">
+                                <label for="email">E-Mail</label>
+                                <input type="email"
+                                       name="email"
+                                       id="email"
+                                       value="<%= oldValues.email %>"
+                                       class="<%= validationErrors.find(x => x.param == 'email') ? 'invalid' : '' %>">
+                            </div>
+                            <div class="form-control">
+                                <label for="password">Password</label>
+                                <input type="password"
+                                       name="password"
+                                       id="password"
+                                       value="<%= oldValues.password %>"
+                                       class="<%= validationErrors.find(x => x.param == 'password') ? 'invalid' : '' %>">
+                            </div>
+                            <div class="form-control">
+                                <label for="confirmPassword">Confirm Password</label>
+                                <input type="password"
+                                       name="confirmPassword"
+                                       id="confirmPassword"
+                                       value="<%= oldValues.confirmPassword %>"
+                                       class="<%= validationErrors.find(x => x.param == 'confirmPassword') ? 'invalid' : '' %>">
+                            </div>
+                            <input type="text"
+                                   hidden
+                                   name="_csrf"
+                                   value="<%= csrfToken %>">
+                            <button class="btn"
+                                    type="submit">signup</button>
+                        </form>
             </main>
             <%- include('../includes/end.ejs')
                 %>

@@ -11,11 +11,14 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf')
 const flash = require('connect-flash')
 
-const MONGODB_URI = 'mongodb+srv://usmanahmed:usman123@cluster0.ozm2t4m.mongodb.net/shop'
+
+const MONGODB_URI = 'mongodb+srv://usmanahmed:usman123@cluster0.fjrggdo.mongodb.net/shop'
+
 const store = new MongoDBStore({
     uri: MONGODB_URI,
     collection: 'sessions'
 });
+
 const csrfProtection = csrf()
 
 // const mongoConnect = require('./util/database').MongoConnect
@@ -40,8 +43,8 @@ app.use(csrfProtection)
 app.use(flash())
 app.use((req, res, next) =>
 {
-    console.log(req.session)
     res.locals.isAuthenticated = req.session.isLoggedIn
+    console.log(req.csrfToken())
     res.locals.csrfToken = req.csrfToken()
     next()
 })
