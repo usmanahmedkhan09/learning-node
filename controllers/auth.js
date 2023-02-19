@@ -104,7 +104,13 @@ exports.postLogin = (req, res, next) =>
           res.redirect('/login')
         })
       }
-    }).catch((err) => console.log(err))
+    })
+    .catch((err) =>
+    {
+      const error = new Error()
+      error.httpStatusCode = 500
+      return next(error)
+    })
 };
 
 exports.postSignup = (req, res, next) =>
@@ -148,7 +154,13 @@ exports.postSignup = (req, res, next) =>
           text: 'Awesome sauce',
           html: '<b>Awesome sauce</b>'
         })
-      }).catch((err) => console.log(err))
+      })
+      .catch((err) =>
+      {
+        const error = new Error()
+        error.httpStatusCode = 500
+        return next(error)
+      })
   }
 };
 
@@ -256,7 +268,12 @@ exports.getNewPassword = (req, res, next) =>
         userId: user._id.toString(),
         token: token
       });
-    }).catch((err) => console.log(err))
+    }).catch((err) =>
+    {
+      const error = new Error()
+      error.httpStatusCode = 500
+      return next(error)
+    })
 
 }
 
@@ -285,7 +302,9 @@ exports.postNewPassword = (req, res, next) =>
     res.redirect('/login')
   }).catch((err) =>
   {
-    console.log(err)
+    const error = new Error()
+    error.httpStatusCode = 500
+    return next(error)
   })
 
 }

@@ -44,7 +44,6 @@ app.use(flash())
 app.use((req, res, next) =>
 {
     res.locals.isAuthenticated = req.session.isLoggedIn
-    console.log(req.csrfToken())
     res.locals.csrfToken = req.csrfToken()
     next()
 })
@@ -59,22 +58,33 @@ app.use((req, res, next) =>
     {
         req.user = user
         next()
+    }).catch(err =>
+    {
+        next(new Error(err))
     })
 
 })
+
 
 
 app.use('/admin', adminRoutes)
 app.use(shopRoutes)
 app.use(authRoutes)
 
+app.get('/500', errorController.get500)
 app.use(errorController.get404);
 
+app.use((error, req, res, next) =>
+{
+    res.render('500',
+        {
+            pageTitle: 'Error',
+            path: '/500',
+            isAuthenticated: req.session.isLoggedIn
+        }
+    );
+})
 
-// app.use((req, res) =>
-// {
-//     res.status(404).render('404', { pageTitle: 'Page Not Found', path: '/404', isAuthenticated: isLoggedIn })
-// })
 
 mongoose.connect(MONGODB_URI)
     .then((result) =>

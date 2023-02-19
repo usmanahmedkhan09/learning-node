@@ -116,7 +116,12 @@ exports.getOrders = (req, res, next) =>
       pageTitle: 'Your Orders',
       orders: orders,
     });
-  }).catch((error) => console.log(error))
+  }).catch((err) =>
+  {
+    const error = new Error()
+    error.httpStatusCode = 500
+    return next(error)
+  })
 
 };
 
