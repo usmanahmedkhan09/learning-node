@@ -27,7 +27,6 @@ exports.getLogin = (req, res, next) =>
   res.render('auth/login', {
     path: '/login',
     pageTitle: 'Login',
-    isAuthenticated: req.session.isLoggedIn,
     errorMessage: null,
     oldValues: {
       email: '',
@@ -50,7 +49,6 @@ exports.postLogin = (req, res, next) =>
     return res.status(422).render('auth/login', {
       path: '/login',
       pageTitle: 'Login',
-      isAuthenticated: false,
       errorMessage: errors.array()[0].msg,
       oldValues: {
         email: email,
@@ -67,7 +65,6 @@ exports.postLogin = (req, res, next) =>
         return res.status(422).render('auth/login', {
           path: '/login',
           pageTitle: 'Login',
-          isAuthenticated: false,
           errorMessage: 'Invalid email or password.',
           oldValues: {
             email: email,
@@ -81,8 +78,8 @@ exports.postLogin = (req, res, next) =>
         {
           if (doMatch)
           {
-            req.session.isLoggedIn = true
-            req.session.user = user
+            req.session.isLoggedIn = true;
+            req.session.user = user;
             return req.session.save((err) =>
             {
               res.redirect('/')
@@ -91,7 +88,6 @@ exports.postLogin = (req, res, next) =>
           res.status(422).render('auth/login', {
             path: '/login',
             pageTitle: 'Login',
-            isAuthenticated: false,
             errorMessage: 'Invalid email or password.',
             oldValues: {
               email: email,
@@ -123,7 +119,6 @@ exports.postSignup = (req, res, next) =>
     return res.status(422).render('auth/signup', {
       path: '/signup',
       pageTitle: 'Signup',
-      isAuthenticated: false,
       errorMessage: errors.array()[0].msg,
       oldValues: {
         email: email,
@@ -169,7 +164,6 @@ exports.getSignup = (req, res, next) =>
   res.render('auth/signup', {
     path: '/signup',
     pageTitle: 'Signup',
-    isAuthenticated: false,
     errorMessage: null,
     oldValues: {
       email: '',
@@ -202,7 +196,6 @@ exports.getReset = (req, res, next) =>
   res.render('auth/reset', {
     path: '/reset',
     pageTitle: 'Reset Password',
-    isAuthenticated: req.session.isLoggedIn,
     errorMessage: message
   });
 }
@@ -263,7 +256,6 @@ exports.getNewPassword = (req, res, next) =>
       res.render('auth/new-password', {
         path: '/reset',
         pageTitle: 'Update Password',
-        isAuthenticated: req.session.isLoggedIn,
         errorMessage: message,
         userId: user._id.toString(),
         token: token

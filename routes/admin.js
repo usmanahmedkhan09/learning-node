@@ -1,7 +1,8 @@
-const path = require('path');
 
 const express = require('express');
 const { body } = require('express-validator')
+// const multer = require('multer')
+// const upload = multer({ dest: 'uploads/' })
 
 const adminController = require('../controllers/admin');
 const auth = require('../middleware/is-auth')
@@ -15,13 +16,13 @@ router.get('/add-product', auth, adminController.getAddProduct);
 router.get('/products', auth, adminController.getProducts);
 
 // /admin/add-product => POST
-router.post('/add-product', auth,
+router.post('/add-product',
     [
         body('title').isString().isLength({ min: 5 }).withMessage('Please enter a valid title.').trim(),
-        body('imageUrl').isURL().withMessage('Please enter a valid url.'),
         body('price').isFloat().withMessage('Please enter a valid price.'),
         body('description').isLength({ min: 5, max: 500 }).withMessage('Please enter a valid description and it should between 5 to 500 characters.').trim()
     ],
+
     adminController.postAddProduct);
 
 // /admin/edit-product => POST
@@ -34,7 +35,6 @@ router.post('/edit-product', auth, adminController.postEditProduct);
 router.post('/delete-product/:id',
     [
         body('title').isString().isLength({ min: 5 }).withMessage('Please enter a valid title.').trim(),
-        body('imageUrl').isURL().withMessage('Please enter a valid url.'),
         body('price').isFloat().withMessage('Please enter a valid price.'),
         body('description').isLength({ min: 5, max: 500 }).withMessage('Please enter a valid description and it should between 5 to 500 characters.').trim()
     ],

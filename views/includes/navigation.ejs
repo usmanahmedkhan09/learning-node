@@ -11,7 +11,8 @@
                 <a class="<%= path === '/products' ? 'active' : '' %>"
                    href="/products">Products</a>
             </li>
-            <% if(isAuthenticated)
+            <% if
+               (isAuthenticated)
                {
                %>
                 <li class="main-header__item">
@@ -22,7 +23,6 @@
                     <a class="<%= path === '/orders' ? 'active' : '' %>"
                        href="/orders">Orders</a>
                 </li>
-
                 <li class="main-header__item">
                     <a class="<%= path === '/admin/add-product' ? 'active' : '' %>"
                        href="/admin/add-product">Add Product
@@ -37,7 +37,8 @@
                    %>
         </ul>
         <ul class="main-header__item-list">
-            <% if(!isAuthenticated)
+            <% if
+               (!isAuthenticated)
                {
                %>
                 <li class="main-header__item">
@@ -55,12 +56,10 @@
                     <li class="main-header__item">
                         <form action="/logout"
                               method="POST">
-                            <input type="text"
-                                   hidden
+                            <input type="hidden"
                                    name="_csrf"
                                    value="<%= csrfToken %>">
-                            <button class="button"
-                                    type="submit">Logout</button>
+                            <button type="submit">Logout</button>
                         </form>
                     </li>
                     <% }
@@ -121,9 +120,8 @@
                        %>
                         <li class="mobile-nav__item">
                             <form action="/logout"
-                                  method="post">
-                                <input type="text"
-                                       hidden
+                                  method="POST">
+                                <input type="hidden"
                                        name="_csrf"
                                        value="<%= csrfToken %>">
                                 <button type="submit">Logout</button>
