@@ -4,16 +4,41 @@ const path = require('path')
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 
+const ITEMS_PER_PAGE = 2
+
 exports.getProducts = (req, res, next) =>
 {
-  Product.find().then((products) =>
+  const page = +req.query.page || 1
+  let totalItems;
+  Product.find().countDocuments().then((totalProducts) =>
   {
-    res.render('shop/product-list', {
-      prods: products,
-      pageTitle: 'All Products',
-      path: '/products',
-    });
+    totalItems = totalProducts
+    return Product.find()
+      .skip((page - 1) * ITEMS_PER_PAGE)
+      .limit(ITEMS_PER_PAGE)
   })
+    .then((products) =>
+    {
+      res.render('shop/product-list', {
+        prods: products,
+        pageTitle: 'All Products',
+        path: '/products',
+        currentPage: page,
+        hasNextPage: page * ITEMS_PER_PAGE < totalItems,
+        hasPreviousPage: page > 1,
+        nextPage: page + 1,
+        previousPage: page - 1,
+        lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE)
+      });
+    })
+  // Product.find().then((products) =>
+  // {
+  //   res.render('shop/product-list', {
+  //     prods: products,
+  //     pageTitle: 'All Products',
+  //     path: '/products',
+  //   });
+  // })
 
 };
 
@@ -33,14 +58,29 @@ exports.getProduct = (req, res, next) =>
 
 exports.getIndex = (req, res, next) =>
 {
-  Product.find().then((products) =>
+  const page = +req.query.page || 1
+  let totalItems;
+  Product.find().countDocuments().then((totalProducts) =>
   {
-    res.render('shop/index', {
-      prods: products,
-      pageTitle: 'Shop',
-      path: '/',
-    });
+    totalItems = totalProducts
+    return Product.find()
+      .skip((page - 1) * ITEMS_PER_PAGE)
+      .limit(ITEMS_PER_PAGE)
   })
+    .then((products) =>
+    {
+      res.render('shop/index', {
+        prods: products,
+        pageTitle: 'Shop',
+        path: '/',
+        currentPage: page,
+        hasNextPage: page * ITEMS_PER_PAGE < totalItems,
+        hasPreviousPage: page > 1,
+        nextPage: page + 1,
+        previousPage: page - 1,
+        lastPage: Math.ceil(totalItems / ITEMS_PER_PAGE)
+      });
+    })
 };
 
 exports.getCart = (req, res, next) =>
