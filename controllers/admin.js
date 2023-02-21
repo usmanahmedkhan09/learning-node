@@ -97,7 +97,8 @@ exports.postEditProduct = (req, res, next) =>
     product.price = updatedPrice
     if (image)
     {
-      fileHelper.deleteFile(product.imageUrl)
+      console.log(product.imageUrl)
+      fileHelper.deleteFile('/' + product.imageUrl)
       product.imageUrl = '/' + image.path
     }
     return product.save().then((result) =>
@@ -204,7 +205,7 @@ exports.deleteProduct = (req, res, next) =>
     {
       return next(new Error('Product not found'))
     }
-    fileHelper.deleteProduct(product.imageUrl)
+    fileHelper.deleteFile('/' + product.imageUrl)
     return Product.deleteOne({ _id: productId, userId: req.user._id })
   })
     .then((resposne) =>

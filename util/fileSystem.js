@@ -6,9 +6,9 @@ const deleteFile = (filepath) =>
     {
         if (err)
         {
-
+            throw (err)
         }
     })
 }
 
-exports.deleteFile = deleteFile;
+exports.deleteFile = deleteFile;    
