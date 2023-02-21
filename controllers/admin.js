@@ -98,8 +98,8 @@ exports.postEditProduct = (req, res, next) =>
     if (image)
     {
       console.log(product.imageUrl)
-      fileHelper.deleteFile('/' + product.imageUrl)
-      product.imageUrl = '/' + image.path
+      fileHelper.deleteFile(product.imageUrl)
+      product.imageUrl = image.path
     }
     return product.save().then((result) =>
     {
@@ -155,7 +155,7 @@ exports.postAddProduct = (req, res, next) =>
     });
   }
 
-  const imageUrl = '/' + image.path;
+  const imageUrl = image.path;
 
   const product = new Product({
     // _id: new mongoose.Types.ObjectId('5badf72403fd8b5be0366e81'),
@@ -205,7 +205,7 @@ exports.deleteProduct = (req, res, next) =>
     {
       return next(new Error('Product not found'))
     }
-    fileHelper.deleteFile('/' + product.imageUrl)
+    fileHelper.deleteFile(product.imageUrl)
     return Product.deleteOne({ _id: productId, userId: req.user._id })
   })
     .then((resposne) =>
