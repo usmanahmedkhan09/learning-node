@@ -3,6 +3,7 @@ const Order = require('../models/order');
 const path = require('path')
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
+const stripe = require('stripe')('sk_test_51Me2IEE2qhkI5G5JavM5zDEt7AEQO6ljCmTxwHGRyLFRoroz3bNyKIHQxzzr1s5DV4rmjiHU1NlAtJnJMzFYZedU00Oce0dEOj');
 
 const ITEMS_PER_PAGE = 2
 
@@ -123,11 +124,17 @@ exports.postCartDeleteProduct = (req, res, next) =>
 
 exports.addOrder = (req, res, next) =>
 {
+  const token = req.body.stripeToken; // Using Express
+  let totalSum = 0;
   req.user
     .populate('cart.items.productId')
     // .execPopulate()
     .then(user =>
     {
+      user.cart.items.forEach(p =>
+      {
+        totalSum += p.quantity * p.productId.price;
+      });
       const products = user.cart.items.map(i =>
       {
         return { quantity: i.quantity, product: { ...i.productId._doc } };
@@ -143,6 +150,13 @@ exports.addOrder = (req, res, next) =>
     })
     .then(result =>
     {
+      const charge = stripe.charges.create({
+        amount: totalSum * 100,
+        currency: 'usd',
+        description: 'Demo Order',
+        source: token,
+        metadata: { order_id: result._id.toString() }
+      });
       return req.user.clearCart();
     })
     .then(() =>
@@ -229,4 +243,20 @@ exports.getInvoice = (req, res, next) =>
     pdfDoc.end();
   }).catch()
 
+}
+
+exports.getCheckout = (req, res, next) =>
+{
+  req.user.populate('cart.items.productId').then((user) =>
+  {
+    const products = user.cart.items
+    let total = 0;
+    products.forEach((product) => total += product.quantity * product.productId.price)
+    res.render('shop/checkout', {
+      path: '/checkout',
+      pageTitle: 'Checkout',
+      products: products,
+      totalSum: total
+    });
+  })
 }
