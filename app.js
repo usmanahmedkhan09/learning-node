@@ -1,6 +1,5 @@
-
-
 const path = require('path');
+const fs = require('fs')
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -11,6 +10,9 @@ const csrf = require('csurf');
 const flash = require('connect-flash');
 const rootDir = require('./util/path')
 const multer = require('multer')
+const helmet = require('helmet')
+const compression = require('compression')
+const morgan = require('morgan')
 
 
 const errorController = require('./controllers/error');
@@ -19,7 +21,7 @@ const auth = require('./middleware/is-auth')
 const User = require('./models/user');
 
 
-const MONGODB_URI = 'mongodb+srv://usmanahmed:usman123@cluster0.ozm2t4m.mongodb.net/shop'
+const MONGODB_URI = `mongodb+srv://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@node-practice.ivqzeor.mongodb.net/${process.env.DATABASE_NAME}`
 
 const app = express();
 const store = new MongoDBStore({
@@ -63,6 +65,10 @@ const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
 
+const fileLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'), { flags: 'a' })
+app.use(helmet)
+app.use(compression)
+app.use(morgan('combined', { stream: fileLogStream }))
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(
     multer({ storage: storage, }).single('image')
@@ -143,7 +149,7 @@ mongoose
     .connect(MONGODB_URI)
     .then((result) =>
     {
-        app.listen(3000)
+        app.listen(process.env.PORT || 3000)
     }).catch(err => console.log(err))
 
 

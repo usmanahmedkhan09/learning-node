@@ -5,13 +5,15 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "NODE_ENV=production MONGODB_USER=usmanahmed MONGODB_PASSWORD=usman123 DATABASE_NAME=shop STRIPE_KEY=sk_test_51Me2IEE2qhkI5G5JavM5zDEt7AEQO6ljCmTxwHGRyLFRoroz3bNyKIHQxzzr1s5DV4rmjiHU1NlAtJnJMzFYZedU00Oce0dEOj node app.js",
+    "start:dev": "nodemon app.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.1",
+    "compression": "^1.7.4",
     "connect-flash": "^0.1.1",
     "connect-mongodb-session": "^3.1.1",
     "csrf-sync": "^4.0.0",
@@ -20,8 +22,10 @@
     "express": "^4.18.2",
     "express-session": "^1.17.3",
     "express-validator": "^6.15.0",
+    "helmet": "^6.0.1",
     "mongodb": "^4.13.0",
     "mongoose": "^6.9.1",
+    "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.0.1",
     "nodemailer": "^6.9.1",
