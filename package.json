@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": "16.16.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "NODE_ENV=production MONGODB_USER=usmanahmed MONGODB_PASSWORD=usman123 DATABASE_NAME=shop STRIPE_KEY=sk_test_51Me2IEE2qhkI5G5JavM5zDEt7AEQO6ljCmTxwHGRyLFRoroz3bNyKIHQxzzr1s5DV4rmjiHU1NlAtJnJMzFYZedU00Oce0dEOj node app.js",
